@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="LumaStay hotel operations dashboard">
+    <title>{{ page_title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">luma<span>stay</span><small>/ PMS</small></div>
+            <p class="eyebrow sidebar-label">Workspace</p>
+            <nav class="nav-list" aria-label="Main navigation">
+                {% for item in nav_items %}
+                <a class="nav-item{% if loop.first %} active{% endif %}" href="#" data-view="{{ item }}"><span
+                        aria-hidden="true">{{ '●' if loop.first else '○' }}</span>{{ item }}</a>
+                {% endfor %}
+            </nav>
+            <div class="sidebar-footer">
+                <p class="eyebrow">Today at a glance</p>
+                <p>Tuesday, 14 May 2024<br><span class="system-status">● All systems operational</span></p>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <button class="icon-button menu-button" id="menu-toggle" aria-label="Open navigation"
+                    aria-expanded="false">☰</button>
+                <div>
+                    <p class="eyebrow">Tuesday · 14 May 2024</p>
+                    <h1>Good morning, Alina.</h1>
+                    <p class="muted">Here is what needs your attention across the property today.</p>
+                </div>
+                <time class="clock" id="clock" datetime=""></time>
+            </header>
+
+            <section class="kpi-grid" aria-label="Property overview">
+                {% for kpi in kpis %}
+                <article class="kpi-card">
+                    <p class="kpi-label">{{ kpi.label }}</p><strong>{{ kpi.value }}</strong>
+                    <p class="kpi-change">{{ kpi.change }}</p>
+                    <p class="fine-print">{{ kpi.detail }}</p>
+                </article>
+                {% endfor %}
+            </section>
+
+            <section class="dashboard-grid">
+                <article class="panel occupancy-panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Occupancy performance</h2>
+                            <p class="muted">Actual rooms sold against forecast · next 7 days</p>
+                        </div><span class="legend"><i class="legend-dot actual"></i> Actual <i
+                                class="legend-dot forecast"></i> Forecast</span>
+                    </div>
+                    <div class="chart" aria-label="Occupancy performance chart">
+                        {% for day in occupancy %}<div class="chart-column">
+                            <div class="bars"><span class="bar actual-bar" style="height: {{ day.occupied }}%"
+                                    title="{{ day.occupied }}% occupied"></span><span class="bar forecast-bar"
+                                    style="height: {{ day.forecast }}%" title="{{ day.forecast }}% forecast"></span>
+                            </div><small>{{ day.day }}</small>
+                        </div>{% endfor %}
+                    </div>
+                </article>
+                <article class="panel revenue-panel">
+                    <div class="section-heading">
+                        <div>
+                            <h2>Revenue mix</h2>
+                            <p class="muted">Today's confirmed room revenue</p>
+                        </div>
+                    </div>
+                    <div class="revenue-list">{% for item in revenue %}<div class="revenue-row"><span>{{ item.name
+                                }}</span><strong>${{ '{:,}'.format(item.amount) }}</strong>
+                            <div class="progress"><span style="width: {{ item.percent }}%"></span></div>
+                        </div>{% endfor %}</div>
+                </article>
+            </section>
+
+            <section class="panel movement-panel">
+                <div class="section-heading">
+                    <div>
+                        <h2>Today's movement</h2>
+                        <p class="muted">Front desk activity and guest flow</p>
+                    </div>
+                    <div class="tabs"><button class="tab active" data-tab="arrivals">Arrivals · 24</button><button
+                            class="tab" data-tab="departures">Departures · 19</button></div>
+                </div>
+                <div class="table-wrap">
+                    <table id="movement-table">
+                        <thead>
+                            <tr>
+                                <th>Time / room</th>
+                                <th>Guest</th>
+                                <th>Room type</th>
+                                <th>Stay / checkout</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <button class="primary-button" id="confirm-arrival">Confirm next arrival</button>
+                <p class="notice" id="confirmation" role="status" hidden></p>
+            </section>
+
+            <section class="lower-grid">
+                <div>
+                    <div class="section-heading section-heading-tight">
+                        <div>
+                            <h2>Live room board</h2>
+                            <p class="muted">Current status across the property</p>
+                        </div>
+                    </div>
+                    <div class="room-grid">{% for room in rooms %}<article class="room-card"><strong>{{ room.number
+                                }}</strong><span>{{ room.type }}</span><small
+                                class="status {{ room.status|lower|replace(' ', '-') }}">● {{ room.status }}</small>
+                        </article>{% endfor %}</div>
+                </div>
+                <div>
+                    <div class="section-heading section-heading-tight">
+                        <div>
+                            <h2>Housekeeping pulse</h2>
+                            <p class="muted">Prioritised floor tasks</p>
+                        </div>
+                    </div>
+                    <div class="task-list">{% for task in tasks %}<div class="task">
+                            <div><strong>Room {{ task.room }}</strong><span>{{ task.description }}</span></div><small>{{
+                                task.owner|upper }}</small>
+                        </div>{% endfor %}</div>
+                </div>
+            </section>
+            <footer><span>lumaStay PMS · Operations workspace</span><span>Data synced · just now</span></footer>
+        </main>
+    </div>
+</body>
+
+</html>
