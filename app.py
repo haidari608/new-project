@@ -168,7 +168,7 @@ def build_summary(db):
 
 @app.get("/")
 def dashboard():
-    return render_template("index.html", page_title="LumaStay / Operations")
+    return render_template("index.html", page_title="Daira Hotel / Operations")
 
 
 @app.get("/health")

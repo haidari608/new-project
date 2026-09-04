@@ -1,4 +1,4 @@
-# lumaStay PMS
+# Daira Hotel PMS
 
 A deployable hotel operations dashboard built with Flask, HTML, CSS, and vanilla JavaScript.
 
