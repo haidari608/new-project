@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Daira Hotel operations workspace">
+    <title>{{ page_title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:wght@500;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</head>
+
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">luma<span>stay</span><small>/ PMS</small></div>
+            <p class="eyebrow sidebar-label">Property operations</p>
+            <nav class="nav-list" aria-label="Main navigation">
+                <button class="nav-item active" data-view="overview"><span>◈</span>Overview</button>
+                <button class="nav-item" data-view="reservations"><span>▣</span>Reservations</button>
+                <button class="nav-item" data-view="rooms"><span>▦</span>Rooms & rates</button>
+                <button class="nav-item" data-view="housekeeping"><span>✦</span>Housekeeping</button>
+                <button class="nav-item" data-view="guests"><span>◉</span>Guests</button>
+            </nav>
+            <div class="sidebar-footer">
+                <p class="eyebrow">Front desk shift</p>
+                <p><strong>Alina Morgan</strong><br><span class="system-status">● Connected · live data</span></p>
+            </div>
+        </aside>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-start"><button class="icon-button menu-button" id="menu-toggle"
+                        aria-label="Open navigation" aria-expanded="false">☰</button>
+                    <div>
+                        <p class="eyebrow" id="today-label">Today</p>
+                        <h1 id="page-heading">Good morning, Alina.</h1>
+                        <p class="muted" id="page-subtitle">Your property at a glance, with the next decisions in view.
+                        </p>
+                    </div>
+                </div>
+                <div class="topbar-actions"><span class="live-pill"><i></i> Live</span><time class="clock"
+                        id="clock"></time><button class="primary-button compact" data-open-modal="reservation-modal">+
+                        New reservation</button></div>
+            </header>
+            <div class="view" id="overview-view">
+                <section class="kpi-grid" aria-label="Property overview">
+                    <article class="kpi-card">
+                        <p class="kpi-label">Occupancy</p><strong id="kpi-occupancy">—</strong>
+                        <p class="kpi-change">Rooms currently sold</p>
+                        <p class="fine-print" id="kpi-occupancy-detail">—</p>
+                    </article>
+                    <article class="kpi-card">
+                        <p class="kpi-label">Arrivals today</p><strong id="kpi-arrivals">—</strong>
+                        <p class="kpi-change">Guests expected today</p>
+                        <p class="fine-print">Prepare keys and welcome packs</p>
+                    </article>
+                    <article class="kpi-card">
+                        <p class="kpi-label">Departures today</p><strong id="kpi-departures">—</strong>
+                        <p class="kpi-change">Rooms to turn</p>
+                        <p class="fine-print" id="kpi-ready">— rooms ready now</p>
+                    </article>
+                    <article class="kpi-card accent-card">
+                        <p class="kpi-label">Room revenue</p><strong id="kpi-revenue">—</strong>
+                        <p class="kpi-change">Confirmed stays in house</p>
+                        <p class="fine-print" id="kpi-tasks">— open tasks</p>
+                    </article>
+                </section>
+                <section class="dashboard-grid">
+                    <article class="panel priority-panel">
+                        <div class="section-heading">
+                            <div>
+                                <p class="eyebrow">Front desk queue</p>
+                                <h2>Today's movement</h2>
+                                <p class="muted">Keep arrivals flowing and departures accounted for.</p>
+                            </div>
+                            <div class="tabs"><button class="tab active"
+                                    data-movement="arrivals">Arrivals</button><button class="tab"
+                                    data-movement="departures">Departures</button></div>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Guest</th>
+                                        <th>Room</th>
+                                        <th>Stay</th>
+                                        <th>Payment</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="movement-body"></tbody>
+                            </table>
+                        </div>
+                    </article>
+                    <article class="panel attention-panel">
+                        <div class="section-heading">
+                            <div>
+                                <p class="eyebrow">Needs attention</p>
+                                <h2>Housekeeping pulse</h2>
+                                <p class="muted">The next rooms and tasks to resolve.</p>
+                            </div><button class="text-button" data-view-target="housekeeping">View all →</button>
+                        </div>
+                        <div id="attention-list" class="attention-list"></div>
+                    </article>
+                </section>
+                <section class="dashboard-grid lower-dashboard">
+                    <article class="panel">
+                        <div class="section-heading">
+                            <div>
+                                <p class="eyebrow">Inventory</p>
+                                <h2>Live room board</h2>
+                            </div><button class="text-button" data-view-target="rooms">Manage rooms →</button>
+                        </div>
+                        <div id="overview-rooms" class="room-grid"></div>
+                    </article>
+                    <article class="panel revenue-panel">
+                        <div class="section-heading">
+                            <div>
+                                <p class="eyebrow">Today</p>
+                                <h2>Revenue by source</h2>
+                            </div>
+                        </div>
+                        <div id="revenue-list" class="revenue-list"></div>
+                    </article>
+                </section>
+            </div>
+            <div class="view hidden" id="reservations-view">
+                <div class="view-header">
+                    <div>
+                        <p class="eyebrow">Front desk</p>
+                        <h2>Reservations</h2>
+                        <p class="muted">Search, check in, and close out every stay.</p>
+                    </div><button class="primary-button" data-open-modal="reservation-modal">+ New reservation</button>
+                </div>
+                <div class="toolbar"><label class="search-field">⌕<input id="reservation-search"
+                            placeholder="Search guest, confirmation, room" autocomplete="off"></label><select
+                        id="reservation-filter">
+                        <option value="all">All statuses</option>
+                        <option>Confirmed</option>
+                        <option>Arriving</option>
+                        <option>Checked in</option>
+                        <option>Departing</option>
+                        <option>Departed</option>
+                    </select></div>
+                <div class="panel table-panel">
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Confirmation</th>
+                                    <th>Guest</th>
+                                    <th>Dates</th>
+                                    <th>Room</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservations-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="view hidden" id="rooms-view">
+                <div class="view-header">
+                    <div>
+                        <p class="eyebrow">Inventory control</p>
+                        <h2>Rooms & rates</h2>
+                        <p class="muted">Update room readiness as the property changes.</p>
+                    </div>
+                    <div class="legend-inline"><span class="dot clean"></span>Ready <span
+                            class="dot occupied"></span>Occupied <span class="dot dirty"></span>Needs turn</div>
+                </div>
+                <div id="rooms-page-grid" class="rooms-page-grid"></div>
+            </div>
+            <div class="view hidden" id="housekeeping-view">
+                <div class="view-header">
+                    <div>
+                        <p class="eyebrow">Operations team</p>
+                        <h2>Housekeeping</h2>
+                        <p class="muted">Prioritized work by room, assignee, and due time.</p>
+                    </div>
+                </div>
+                <div id="tasks-page-list" class="task-board"></div>
+            </div>
+            <div class="view hidden" id="guests-view">
+                <div class="view-header">
+                    <div>
+                        <p class="eyebrow">Guest relations</p>
+                        <h2>Guest directory</h2>
+                        <p class="muted">Keep preferences and stay history close to the desk.</p>
+                    </div>
+                </div>
+                <div class="toolbar"><label class="search-field">⌕<input id="guest-search"
+                            placeholder="Search by name or email" autocomplete="off"></label></div>
+                <div id="guest-list" class="guest-grid"></div>
+            </div>
+            <footer><span>Daira Hotel PMS · Operations workspace</span><span id="sync-status">Syncing live data</span>
+            </footer>
+        </main>
+    </div>
+    <div class="modal-backdrop hidden" id="reservation-modal" role="dialog" aria-modal="true"
+        aria-labelledby="reservation-title">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">Front desk</p>
+                    <h2 id="reservation-title">Create reservation</h2>
+                </div><button class="close-button" data-close-modal="reservation-modal" aria-label="Close">×</button>
+            </div>
+            <form id="reservation-form">
+                <div class="form-grid"><label>First name<input name="first_name" required></label><label>Last name<input
+                            name="last_name" required></label><label>Email<input name="email"
+                            type="email"></label><label>Phone<input name="phone"
+                            type="tel"></label><label>Check-in<input name="check_in" type="date"
+                            required></label><label>Check-out<input name="check_out" type="date"
+                            required></label><label>Adults<select name="adults">
+                            <option>1</option>
+                            <option selected>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                        </select></label><label>Room<select name="room_id" id="reservation-room">
+                            <option value="">Assign later</option>
+                        </select></label><label>Rate total<input name="total_amount" type="number" min="0" step="1"
+                            placeholder="0"></label><label>Source<select name="source">
+                            <option>Direct</option>
+                            <option>Booking.com</option>
+                            <option>Corporate</option>
+                            <option>Walk-in</option>
+                        </select></label></div><label>Notes<textarea name="notes" rows="3"
+                        placeholder="Arrival preference, accessibility, or guest request"></textarea></label>
+                <p class="form-error" id="reservation-error"></p>
+                <div class="modal-actions"><button type="button" class="secondary-button"
+                        data-close-modal="reservation-modal">Cancel</button><button type="submit"
+                        class="primary-button">Create reservation</button></div>
+            </form>
+        </div>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+
+</body>
+
+</html>
