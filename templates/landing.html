@@ -1,0 +1,34 @@
+{% extends 'base.html' %}{% block title %}Find your next opportunity{% endblock %}{% block content %}<div
+    class="landing">
+    <header class="landing-nav"><a class="brand" href="{{ url_for('home') }}"><span
+                class="brand-mark">A</span><span>Afghan <span class="brand-accent">ScolarHub</span></span></a>
+        <div><a class="button ghost" href="{{ url_for('login') }}">Sign in</a><a class="button"
+                href="{{ url_for('register') }}">Create account</a></div>
+    </header>
+    <section class="landing-hero">
+        <div>
+            <p class="eyebrow">Built for Afghan students, open to the world</p>
+            <h1>Make your next chapter <span>possible.</span></h1>
+            <p>Find funding, compare destinations, and turn every university application into a clear, confident plan.
+            </p>
+            <div class="hero-actions"><a class="button" href="{{ url_for('register') }}">Start your journey ↗</a><a
+                    class="button ghost" href="{{ url_for('login') }}">Explore workspace</a></div>
+        </div>
+        <div class="hero-art">
+            <div class="hero-card one"><span class="tag">92% match</span>
+                <h3>Built around your profile</h3>
+                <div class="mini-line"></div>
+                <div class="mini-line short"></div>
+                <p class="item-meta">Personalized opportunities</p>
+            </div>
+            <div class="hero-card two"><span class="tag">Deadline intelligence</span>
+                <h3>Never lose the thread</h3>
+                <div class="mini-line"></div>
+                <div class="mini-line"></div>
+                <div class="mini-line short"></div>
+                <p class="item-meta">Applications, documents, and next actions</p>
+            </div>
+        </div>
+    </section>
+    <footer class="landing-footer">Afghan ScolarHub · A focused home for your next academic chapter</footer>
+</div>{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% block title %}Application materials{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Prepare once, tailor thoughtfully</p>
+        <h1>Application materials</h1>
+        <p class="muted">A calm place for the writing and documents you use repeatedly.</p>
+    </div>
+</div>
+<div class="card-grid">{% for name, description, status in materials %}<article class="panel material-card">
+        <div class="card-top"><span class="tag">{{ status }}</span><span class="material-icon">✎</span></div>
+        <h2>{{ name }}</h2>
+        <p class="detail-copy">{{ description }}</p><button class="button ghost" type="button">Open workspace ↗</button>
+    </article>{% endfor %}</div>{% endblock %}

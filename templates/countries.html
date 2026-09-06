@@ -1,0 +1,16 @@
+{% extends 'base.html' %}{% block title %}Country explorer{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Start with a place</p>
+        <h1>Country explorer</h1>
+        <p class="muted">Compare study destinations, universities, and funding paths in one view.</p>
+    </div>
+</div>
+<div class="country-grid">{% for country, universities in countries.items() %}<article class="panel country-card">
+        <div class="country-flag">{{ country[:2]|upper }}</div>
+        <h2>{{ country }}</h2>
+        <p class="muted">{{ universities|length }} university{% if universities|length != 1 %}ies{% endif %} in the
+            ScholarHub directory</p>{% for university in universities %}<div class="country-university">
+            <div><strong>{{ university.name }}</strong><small>{{ university.city }} · {{ university.tuition }}</small>
+            </div><a class="text-link" href="{{ university.website }}" target="_blank">Visit ↗</a>
+        </div>{% endfor %}
+    </article>{% endfor %}</div>{% endblock %}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Afghan ScolarHub{% endblock %} · Afghan ScolarHub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    {% if current_user.is_authenticated %}
+    <aside class="sidebar">
+        <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-mark">A</span><span>Afghan <span
+                    class="brand-accent">ScolarHub</span></span></a>
+        <p class="eyebrow sidebar-label">Workspace</p>
+        <nav>
+            <a class="nav-link {% if request.endpoint == 'dashboard' %}active{% endif %}"
+                href="{{ url_for('dashboard') }}"><span>◈</span> Overview</a>
+            <a class="nav-link {% if request.endpoint in ['scholarships', 'scholarship_detail'] %}active{% endif %}"
+                href="{{ url_for('scholarships') }}"><span>⌕</span> Scholarship finder</a>
+            <a class="nav-link {% if request.endpoint == 'universities' %}active{% endif %}"
+                href="{{ url_for('universities') }}"><span>⌂</span> Universities</a>
+            <a class="nav-link {% if request.endpoint == 'countries' %}active{% endif %}"
+                href="{{ url_for('countries') }}"><span>◎</span> Countries</a>
+            <a class="nav-link {% if request.endpoint == 'applications' %}active{% endif %}"
+                href="{{ url_for('applications') }}"><span>✓</span> Applications</a>
+            <a class="nav-link {% if request.endpoint == 'documents' %}active{% endif %}"
+                href="{{ url_for('documents') }}"><span>▤</span> Documents</a>
+            <a class="nav-link {% if request.endpoint == 'profile' %}active{% endif %}"
+                href="{{ url_for('profile') }}"><span>✦</span> My profile</a>
+            <a class="nav-link {% if request.endpoint == 'calendar' %}active{% endif %}"
+                href="{{ url_for('calendar') }}"><span>◷</span> Calendar</a>
+            <a class="nav-link {% if request.endpoint == 'materials' %}active{% endif %}"
+                href="{{ url_for('materials') }}"><span>✎</span> Materials</a>
+            <a class="nav-link {% if request.endpoint == 'assistant' %}active{% endif %}"
+                href="{{ url_for('assistant') }}"><span>✧</span> Assistant</a>
+            <a class="nav-link {% if request.endpoint == 'updates' %}active{% endif %}"
+                href="{{ url_for('updates') }}"><span>↻</span> Live updates</a>
+            {% if current_user.role == 'admin' %}<a
+                class="nav-link {% if request.endpoint == 'admin' %}active{% endif %}"
+                href="{{ url_for('admin') }}"><span>⚙</span> Admin console</a>{% endif %}
+        </nav>
+        <div class="sidebar-bottom">
+            <div class="profile-mini">
+                <div class="avatar">{{ current_user.name[0] }}</div>
+                <div><strong>{{ current_user.name }}</strong><small>{{ current_user.role|capitalize }}</small></div>
+            </div><a class="logout" href="{{ url_for('logout') }}">Sign out ↗</a>
+        </div>
+    </aside>
+    {% endif %}
+    <main class="{% if current_user.is_authenticated %}app-main{% else %}public-main{% endif %}">
+        {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="flash-stack">{% for
+            category, message in messages %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}</div>{%
+        endif %}{% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+
+</html>

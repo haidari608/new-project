@@ -1,0 +1,35 @@
+{% extends 'base.html' %}{% block title %}My matching profile{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Smart matching</p>
+        <h1>My student profile</h1>
+        <p class="muted">Tell Afghan ScolarHub what you are looking for. Your answers power every match score.</p>
+    </div>
+</div>
+<section class="panel form-panel profile-panel">
+    <form method="post">
+        <div class="form-grid">
+            <div class="field"><label>Home country</label><input class="input" name="country"
+                    value="{{ profile.country }}"></div>
+            <div class="field"><label>Education level</label><select class="select" name="education_level">
+                    <option {% if profile.education_level=="Bachelor's" %}selected{% endif %}>Bachelor's</option>
+                    <option {% if profile.education_level=="Master's" %}selected{% endif %}>Master's</option>
+                    <option>PhD</option>
+                </select></div>
+            <div class="field"><label>Field of study</label><input class="input" name="field"
+                    value="{{ profile.field }}"></div>
+            <div class="field"><label>Graduation year</label><input class="input" type="number" name="graduation_year"
+                    value="{{ profile.graduation_year }}"></div>
+            <div class="field"><label>GPA / grade average</label><input class="input" type="number" step="0.1" min="0"
+                    max="4" name="gpa" value="{{ profile.gpa }}"></div>
+            <div class="field"><label>IELTS / English score</label><input class="input" type="number" step="0.5" min="0"
+                    max="9" name="english_score" value="{{ profile.english_score }}"></div>
+            <div class="field full"><label>Preferred countries</label><input class="input" name="preferred_countries"
+                    value="{{ profile.preferred_countries }}" placeholder="Finland, Germany, Canada"></div>
+            <div class="field full"><label>Funding preference</label><select class="select" name="budget">
+                    <option {% if profile.budget=='Fully funded' %}selected{% endif %}>Fully funded</option>
+                    <option {% if profile.budget=='Partial funding' %}selected{% endif %}>Partial funding</option>
+                    <option>Any funding</option>
+                </select></div>
+        </div><button class="button" type="submit">Save profile ↗</button>
+    </form>
+</section>{% endblock %}

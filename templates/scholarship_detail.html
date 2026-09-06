@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}{{ scholarship.title }}{% endblock %}{% block content %}<p><a
+        class="text-link" href="{{ url_for('scholarships') }}">← Back to finder</a></p>
+<div class="detail-layout" style="margin-top:22px">
+    <section class="panel"><span class="tag">{{ scholarship.funding }}</span>
+        <h1>{{ scholarship.title }}</h1>
+        <p class="provider">{{ scholarship.provider }}{% if scholarship.university %} · {{ scholarship.university.name
+            }}{% endif %}</p>
+        <p class="detail-copy">{{ scholarship.description }}</p>
+        <h3>Eligibility</h3>
+        <p class="detail-copy">{{ scholarship.eligibility }}</p>
+        <form method="post" action="{{ url_for('save_scholarship', scholarship_id=scholarship.id) }}"><button
+                class="button" type="submit">{{ 'Remove from saved' if scholarship in current_user.saved else 'Save
+                opportunity' }}</button></form>
+    </section>
+    <aside class="panel detail-side">
+        <div class="detail-stat"><span>Deadline</span><strong>{{ scholarship.deadline.strftime('%d %b %Y')
+                }}</strong><small class="days">{{ days_left(scholarship.deadline) }} days remaining</small></div>
+        <div class="detail-stat"><span>Award</span><strong>{{ scholarship.amount }}</strong></div>
+        <div class="detail-stat"><span>Study level</span><strong>{{ scholarship.degree_level }}</strong></div>
+        <div class="detail-stat"><span>Language</span><strong>{{ scholarship.language }}</strong></div>
+    </aside>
+</div>{% endblock %}

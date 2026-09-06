@@ -1,0 +1,47 @@
+{% extends 'base.html' %}{% block title %}Admin console{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Operations</p>
+        <h1>Admin console</h1>
+        <p class="muted">A quick pulse on the Afghan ScolarHub network.</p>
+    </div>
+</div>
+<div class="admin-grid">
+    <div class="stat-card"><span class="stat-label">Registered users</span>
+        <div class="stat-value">{{ users }}</div>
+    </div>
+    <div class="stat-card"><span class="stat-label">Scholarships</span>
+        <div class="stat-value">{{ scholarships }}</div>
+    </div>
+    <div class="stat-card"><span class="stat-label">Universities</span>
+        <div class="stat-value">{{ universities }}</div>
+    </div>
+    <div class="stat-card"><span class="stat-label">Applications</span>
+        <div class="stat-value">{{ applications }}</div>
+    </div>
+</div>
+<section class="panel" style="margin-top:22px">
+    <div class="panel-header">
+        <h2>Content operations</h2><a class="button" href="{{ url_for('updates') }}">Open live updates ↗</a>
+    </div>
+    <div class="application-row">
+        <div>
+            <div class="item-title">Google opportunity feed</div>
+            <div class="item-meta">Fetch public scholarship and admissions results into the ScholarHub updates stream.
+            </div>
+        </div>
+        <form method="post" action="{{ url_for('sync_updates') }}"><button class="button ghost" type="submit">Sync now
+                ↻</button></form>
+    </div>
+    <div class="application-row">
+        <div>
+            <div class="item-title">Scholarship verification</div>
+            <div class="item-meta">Review provider details and expiry dates before publishing.</div>
+        </div><span class="status documents-preparing">Planned</span>
+    </div>
+    <div class="application-row">
+        <div>
+            <div class="item-title">Content management</div>
+            <div class="item-meta">Create and update universities, scholarships, and requirements.</div>
+        </div><span class="status documents-preparing">Planned</span>
+    </div>
+</section>{% endblock %}

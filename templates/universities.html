@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block title %}University explorer{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Compare your options</p>
+        <h1>University explorer</h1>
+        <p class="muted">Get the context behind every opportunity.</p>
+    </div>
+</div>
+<form class="search-bar" method="get"><input class="input" name="q" value="{{ query }}"
+        placeholder="Search universities, countries, or cities..."><button class="button" type="submit">Search</button>
+</form>
+<div class="card-grid">{% for item in universities %}<article class="university-card"><span class="tag">{{ item.country
+            }}</span>
+        <h3>{{ item.name }}</h3>
+        <p class="provider">{{ item.city }} · {{ item.tuition }}</p>
+        <p class="detail-copy">{{ item.description }}</p>
+        <div class="card-footer"><span>{{ item.scholarships|length }} scholarships</span><a class="text-link"
+                href="{{ item.website }}" target="_blank">Official site ↗</a></div>
+    </article>{% endfor %}</div>{% endblock %}

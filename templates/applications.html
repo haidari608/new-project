@@ -1,0 +1,54 @@
+{% extends 'base.html' %}{% block title %}Application tracker{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Keep moving</p>
+        <h1>Application tracker</h1>
+        <p class="muted">One place for every application and its next milestone.</p>
+    </div>
+</div>
+<div class="content-grid">
+    <section class="panel">
+        <div class="panel-header">
+            <h2>Your applications</h2><span class="item-meta">{{ applications|length }} total</span>
+        </div>{% for item in applications %}<div class="application-block">
+            <div class="application-row">
+                <div>
+                    <div class="item-title">{{ item.university.name }}</div>
+                    <div class="item-meta">{{ item.program }} · Due {{ item.deadline.strftime('%d %b %Y') }}</div>
+                </div>
+                <div class="application-progress"><strong>{{ item.progress or 0 }}%</strong>
+                    <div class="progress-track"><i style="width:{{ item.progress or 0 }}%"></i></div>
+                </div>
+                <form method="post" action="{{ url_for('update_application', application_id=item.id) }}"><select
+                        class="select" name="status" onchange="this.form.submit()">{% for status in statuses %}<option
+                            {% if item.status==status %}selected{% endif %}>{{ status }}</option>{% endfor
+                        %}</select><input type="hidden" name="progress" value="{{ item.progress or 0 }}"></form>
+            </div>
+            <div class="checklist"><span class="eyebrow">Required documents</span>{% for checklist_item in
+                item.checklist %}<form method="post"
+                    action="{{ url_for('toggle_checklist', application_id=item.id, item_id=checklist_item.id) }}">
+                    <button class="check-button {% if checklist_item.complete %}complete{% endif %}"
+                        title="Toggle checklist item">{{ '✓' if checklist_item.complete else '○' }}</button><span>{{
+                        checklist_item.name }}</span></form>{% endfor %}</div>
+        </div>{% else %}<p class="empty">Your tracker is ready for its first application.</p>{% endfor %}
+    </section>
+    <section class="panel form-panel">
+        <div class="panel-header">
+            <h2>Add an application</h2>
+        </div>
+        <form method="post">
+            <div class="field"><label>University</label><select class="select" name="university_id" required>{% for item
+                    in universities %}<option value="{{ item.id }}">{{ item.name }}</option>{% endfor %}</select></div>
+            <div class="field"><label>Program</label><input class="input" name="program" required
+                    placeholder="e.g. MSc Computer Science"></div>
+            <div class="form-grid">
+                <div class="field"><label>Deadline</label><input class="input" type="date" name="deadline" required>
+                </div>
+                <div class="field"><label>Starting status</label><select class="select" name="status">{% for status in
+                        statuses %}<option>{{ status }}</option>{% endfor %}</select></div>
+            </div>
+            <div class="field"><label>Notes</label><textarea class="input" name="notes" rows="3"
+                    placeholder="What is the next thing to do?"></textarea></div><button class="button"
+                type="submit">Add to tracker +</button>
+        </form>
+    </section>
+</div>{% endblock %}

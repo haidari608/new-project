@@ -1,0 +1,40 @@
+{% extends 'base.html' %}{% block title %}Document manager{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Ready when you are</p>
+        <h1>Document manager</h1>
+        <p class="muted">Keep your core application materials visible and ready.</p>
+    </div>
+</div>
+<div class="content-grid">
+    <section class="panel">
+        <div class="panel-header">
+            <h2>My documents</h2><span class="item-meta">{{ documents|length }} files tracked</span>
+        </div>{% for item in documents %}<div class="doc-row">
+            <div>
+                <div class="item-title">{{ item.name }}</div>
+                <div class="item-meta">{{ item.category }}</div>
+            </div><span class="status {{ item.status|lower }}">{{ item.status }}</span>
+        </div>{% else %}<p class="empty">Add a document to begin your checklist.</p>{% endfor %}
+    </section>
+    <section class="panel form-panel">
+        <div class="panel-header">
+            <h2>Add document</h2>
+        </div>
+        <form method="post">
+            <div class="field"><label>Document name</label><input class="input" name="name" required
+                    placeholder="e.g. Passport"></div>
+            <div class="field"><label>Category</label><select class="select" name="category">
+                    <option>Identity</option>
+                    <option>Academic</option>
+                    <option>Test score</option>
+                    <option>Writing</option>
+                    <option>General</option>
+                </select></div>
+            <div class="field"><label>Status</label><select class="select" name="status">
+                    <option>Ready</option>
+                    <option>Draft</option>
+                    <option>Needs update</option>
+                </select></div><button class="button" type="submit">Add document +</button>
+        </form>
+    </section>
+</div>{% endblock %}

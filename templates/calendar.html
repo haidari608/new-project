@@ -1,0 +1,17 @@
+{% extends 'base.html' %}{% block title %}Application calendar{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">See the whole runway</p>
+        <h1>Application calendar</h1>
+        <p class="muted">Deadlines from your applications and saved scholarships, in one view.</p>
+    </div>
+</div>
+<section class="panel calendar-list">{% for event in events %}<div class="calendar-event">
+        <div class="calendar-date"><strong>{{ event.date.strftime('%d') }}</strong><span>{{ event.date.strftime('%b')
+                }}</span></div>
+        <div><span class="tag">{{ event.kind }}</span>
+            <h3>{{ event.title }}</h3>
+            <p class="item-meta">{{ event.detail }}</p>
+        </div><span class="days {% if days_left(event.date) > 14 %}safe{% endif %}">{{ days_left(event.date) }}
+            days</span>
+    </div>{% else %}<p class="empty">Your calendar is clear. Save a scholarship or add an application to see deadlines
+        here.</p>{% endfor %}</section>{% endblock %}

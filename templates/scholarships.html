@@ -1,0 +1,49 @@
+{% extends 'base.html' %}{% block title %}Scholarship finder{% endblock %}{% block content %}<div class="page-head">
+    <div>
+        <p class="eyebrow">Find your fit</p>
+        <h1>Scholarship finder</h1>
+        <p class="muted">Explore {{ scholarships|length }} opportunities matched to ambitious students.</p>
+    </div>
+</div>
+<form class="search-bar" method="get"><input class="input" name="q" value="{{ filters.q }}"
+        placeholder="Search by name, university, or field...">
+    <div class="filters"><select class="select" name="country">
+            <option value="">All countries</option>{% for item in countries %}<option value="{{ item }}" {% if
+                filters.country==item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+        </select><select class="select" name="degree">
+            <option value="">Any degree</option>{% for item in ["Bachelor's", "Master's"] %}<option {% if
+                filters.degree==item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+        </select><select class="select" name="funding">
+            <option value="">Any funding</option>{% for item in ['Fully funded','Partial funding'] %}<option {% if
+                filters.funding==item %}selected{% endif %}>{{ item }}</option>{% endfor %}
+        </select><select class="select" name="language">
+            <option value="">Any language</option>
+            <option {% if filters.language=='English' %}selected{% endif %}>English</option>
+            <option {% if filters.language=='German' %}selected{% endif %}>German</option>
+        </select><select class="select" name="verified">
+            <option value="">Any status</option>
+            <option {% if filters.verified=='Verified' %}selected{% endif %}>Verified</option>
+            <option {% if filters.verified=='Needs Review' %}selected{% endif %}>Needs Review</option>
+        </select><select class="select" name="max_days">
+            <option value="">Any deadline</option>
+            <option value="14" {% if filters.max_days=='14' %}selected{% endif %}>Within 14 days</option>
+            <option value="30" {% if filters.max_days=='30' %}selected{% endif %}>Within 30 days</option>
+        </select><button class="button" type="submit">Search</button></div>
+</form>
+<div class="card-grid">{% for item in scholarships %}<article class="scholarship-card">
+        <div class="card-top">
+            <div><span class="tag">{{ item.funding }}</span><span class="verified-pill">{{ item.verified_status or
+                    'Verified' }}</span></div>
+            <form method="post" action="{{ url_for('save_scholarship', scholarship_id=item.id) }}"><button
+                    class="save-button {% if item in current_user.saved %}saved{% endif %}" title="Save scholarship">{{
+                    '♥' if item in current_user.saved else '♡' }}</button></form>
+        </div>
+        <h3>{{ item.title }}</h3>
+        <div class="match-line"><strong>{{ matches[item.id][0] }}% match</strong><span>for your profile</span></div>
+        <p class="provider">{{ item.provider }} · {{ item.degree_level }} · {{ item.field }}</p>
+        <p class="detail-copy">{{ item.description }}</p>
+        <div class="card-footer"><span><strong>{{ days_left(item.deadline) }}</strong> days left</span><a
+                class="text-link" href="{{ url_for('scholarship_detail', scholarship_id=item.id) }}">Details ↗</a></div>
+    </article>{% else %}<div class="panel">
+        <p class="empty">No scholarships match those filters. Try widening your search.</p>
+    </div>{% endfor %}</div>{% endblock %}

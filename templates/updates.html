@@ -1,0 +1,31 @@
+{% extends 'base.html' %}{% block title %}Live scholarship and admissions updates{% endblock %}{% block content %}<div
+    class="page-head">
+    <div>
+        <p class="eyebrow">Google-powered discovery</p>
+        <h1>Live opportunity updates</h1>
+        <p class="muted">Scholarship announcements and university admissions news, collected into one focused feed.</p>
+    </div>{% if current_user.role == 'admin' %}<form method="post" action="{{ url_for('sync_updates') }}"><button
+            class="button" type="submit">Sync Google now ↻</button></form>{% endif %}
+</div>
+<div class="updates-notice {% if configured %}configured{% endif %}"><strong>{% if configured %}Connected to Google
+        Programmable Search{% else %}Google Search is not configured yet{% endif %}</strong><span>{% if configured
+        %}Results refresh automatically every 30 minutes. Always verify deadlines and requirements on the official
+        source.{% else %}Add <code>GOOGLE_API_KEY</code> and <code>GOOGLE_CSE_ID</code> to <code>.env</code> to start
+        collecting public results.{% endif %}</span></div>
+<div class="update-tabs"><a class="{% if not category %}active{% endif %}" href="{{ url_for('updates') }}">All
+        updates</a><a class="{% if category == 'Scholarships' %}active{% endif %}"
+        href="{{ url_for('updates', category='Scholarships') }}">Scholarships</a><a
+        class="{% if category == 'Admissions' %}active{% endif %}"
+        href="{{ url_for('updates', category='Admissions') }}">Admissions</a></div>
+<div class="updates-list">{% for item in updates %}<article class="panel update-card">
+        <div class="update-card-head"><span class="tag">{{ item.category }}</span><span class="item-meta">{{ item.source
+                }}</span></div>
+        <h2><a href="{{ item.link }}" target="_blank" rel="noopener">{{ item.title }} ↗</a></h2>
+        <p class="detail-copy">{{ item.snippet }}</p>
+        <div class="card-footer"><span>Found through: {{ item.search_query }}</span><a class="text-link"
+                href="{{ item.link }}" target="_blank" rel="noopener">Open official source ↗</a></div>
+    </article>{% else %}<section class="panel empty-update">
+        <h2>No Google updates yet</h2>
+        <p class="muted">{% if configured %}Try syncing again from the admin account.{% else %}Configure Google
+            Programmable Search to populate this feed.{% endif %}</p>
+    </section>{% endfor %}</div>{% endblock %}

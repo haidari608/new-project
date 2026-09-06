@@ -1,0 +1,22 @@
+{% extends 'base.html' %}{% block title %}Compare saved scholarships{% endblock %}{% block content %}<div
+    class="page-head">
+    <div>
+        <p class="eyebrow">Make the choice clearer</p>
+        <h1>Compare saved scholarships</h1>
+        <p class="muted">Your first three saved opportunities are lined up side by side.</p>
+    </div>
+</div>{% if scholarships %}<div class="compare-grid">
+    <div class="compare-labels panel">
+        <strong>Opportunity</strong><span>Funding</span><span>Award</span><span>Deadline</span><span>Language</span><span>Verification</span>
+    </div>{% for item in scholarships %}<article class="panel compare-column">
+        <h2>{{ item.title }}</h2>
+        <p class="item-meta">{{ item.provider }}</p><span class="tag">{{ item.funding }}</span>
+        <div>{{ item.amount }}</div>
+        <div>{{ item.deadline.strftime('%d %b %Y') }}</div>
+        <div>{{ item.language }}</div>
+        <div class="status ready">{{ item.verified_status or 'Verified' }}</div><a class="text-link"
+            href="{{ url_for('scholarship_detail', scholarship_id=item.id) }}">View details ↗</a>
+    </article>{% endfor %}
+</div>{% else %}<section class="panel">
+    <p class="empty">Save scholarships from the finder to compare them here.</p>
+</section>{% endif %}{% endblock %}
